@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 4
-      author: your_name
+      author: valeena
       changes:
         - createTable:
             tableName: order
@@ -42,20 +42,6 @@ databaseChangeLog:
                     defaultValue: CURRENT_TIMESTAMP
                     onUpdate: CURRENT_TIMESTAMP
 
-        - addForeignKeyConstraint:
-            baseTableName: order
-            baseColumnNames: user_id
-            constraintName: fk_order_user_id
-            referencedTableName: user
-            referencedColumnNames: id
-
-        - addForeignKeyConstraint:
-            baseTableName: order
-            baseColumnNames: order_status_id
-            constraintName: fk_order_status_id
-            referencedTableName: order_status
-            referencedColumnNames: id
-
         - createTable:
             tableName: order_item
             columns:
@@ -89,17 +75,3 @@ databaseChangeLog:
                   constraints:
                     defaultValue: CURRENT_TIMESTAMP
                     onUpdate: CURRENT_TIMESTAMP
-
-        - addForeignKeyConstraint:
-            baseTableName: order_item
-            baseColumnNames: order_id
-            constraintName: fk_order_item_order_id
-            referencedTableName: order
-            referencedColumnNames: id
-
-        - addForeignKeyConstraint:
-            baseTableName: order_item
-            baseColumnNames: recipe_code
-            constraintName: fk_order_items_recipe_reference
-            referencedTableName: recipe
-            referencedColumnNames: code

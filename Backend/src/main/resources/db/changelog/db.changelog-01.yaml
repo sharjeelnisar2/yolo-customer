@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 1
-      author: your_name
+      author: valeena
       changes:
         - createTable:
             tableName: order_status
@@ -27,6 +27,7 @@ databaseChangeLog:
               - column:
                   name: is_active
                   type: BOOLEAN
+                  defaultValue: true
                   constraints:
                     nullable: false
               - column:
@@ -65,6 +66,7 @@ databaseChangeLog:
               - column:
                   name: is_active
                   type: BOOLEAN
+                  defaultValue: true
                   constraints:
                     nullable: false
               - column:

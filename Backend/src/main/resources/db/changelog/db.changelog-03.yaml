@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 3
-      author: your_name
+      author: valeena
       changes:
         - createTable:
             tableName: idea
@@ -45,22 +45,8 @@ databaseChangeLog:
                     defaultValue: CURRENT_TIMESTAMP
                     onUpdate: CURRENT_TIMESTAMP
 
-        - addForeignKeyConstraint:
-            baseTableName: idea
-            baseColumnNames: user_id
-            constraintName: fk_idea_user_id
-            referencedTableName: user
-            referencedColumnNames: id
-
-        - addForeignKeyConstraint:
-            baseTableName: idea
-            baseColumnNames: idea_status_id
-            constraintName: fk_idea_status
-            referencedTableName: idea_status
-            referencedColumnNames: id
-
         - createTable:
-            tableName: recipe_image
+            tableName: interest
             columns:
               - column:
                   name: id
@@ -69,19 +55,50 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
               - column:
-                  name: url
-                  type: VARCHAR(128)
-              - column:
-                  name: recipe_id
+                  name: idea_id
                   type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: text
+                  type: VARCHAR(16)
                   constraints:
                     nullable: false
               - column:
                   name: created_at
                   type: DATETIME
                   defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    defaultValue: CURRENT_TIMESTAMP
+                    onUpdate: CURRENT_TIMESTAMP
+
+        - createTable:
+            tableName: dietary_restriction
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: idea_id
+                  type: INT
                   constraints:
                     nullable: false
+              - column:
+                  name: text
+                  type: VARCHAR(16)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
               - column:
                   name: updated_at
                   type: DATETIME
@@ -135,23 +152,34 @@ databaseChangeLog:
                     defaultValue: CURRENT_TIMESTAMP
                     onUpdate: CURRENT_TIMESTAMP
 
-        - addForeignKeyConstraint:
-            baseTableName: recipe
-            baseColumnNames: idea_code
-            constraintName: fk_recipe_idea_reference
-            referencedTableName: idea
-            referencedColumnNames: code
+        - createTable:
+            tableName: recipe_image
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: url
+                  type: VARCHAR(128)
+              - column:
+                  name: recipe_id
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    defaultValue: CURRENT_TIMESTAMP
+                    onUpdate: CURRENT_TIMESTAMP
 
-        - addForeignKeyConstraint:
-            baseTableName: recipe_image
-            baseColumnNames: recipe_id
-            constraintName: fk_recipe_image_reference
-            referencedTableName: recipe
-            referencedColumnNames: id
-
-        - addForeignKeyConstraint:
-            baseTableName: interest
-            baseColumnNames: idea_id
-            constraintName: fk_idea_interest_user_id
-            referencedTableName: idea
-            referencedColumnNames: id
