@@ -1,0 +1,157 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: your_name
+      changes:
+        - createTable:
+            tableName: idea
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: title
+                  type: VARCHAR(32)
+              - column:
+                  name: description
+                  type: VARCHAR(64)
+              - column:
+                  name: idea_status_id
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: code
+                  type: VARCHAR(5)
+                  constraints:
+                    unique: true
+              - column:
+                  name: created_at
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    defaultValue: CURRENT_TIMESTAMP
+                    onUpdate: CURRENT_TIMESTAMP
+
+        - addForeignKeyConstraint:
+            baseTableName: idea
+            baseColumnNames: user_id
+            constraintName: fk_idea_user_id
+            referencedTableName: user
+            referencedColumnNames: id
+
+        - addForeignKeyConstraint:
+            baseTableName: idea
+            baseColumnNames: idea_status_id
+            constraintName: fk_idea_status
+            referencedTableName: idea_status
+            referencedColumnNames: id
+
+        - createTable:
+            tableName: recipe_image
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: url
+                  type: VARCHAR(128)
+              - column:
+                  name: recipe_id
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    defaultValue: CURRENT_TIMESTAMP
+                    onUpdate: CURRENT_TIMESTAMP
+
+        - createTable:
+            tableName: recipe
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: title
+                  type: VARCHAR(32)
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: idea_code
+                  type: VARCHAR(5)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: serving_size
+                  type: INT
+              - column:
+                  name: price
+                  type: BIGINT
+              - column:
+                  name: code
+                  type: VARCHAR(5)
+                  constraints:
+                    unique: true
+              - column:
+                  name: created_at
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    defaultValue: CURRENT_TIMESTAMP
+                    onUpdate: CURRENT_TIMESTAMP
+
+        - addForeignKeyConstraint:
+            baseTableName: recipe
+            baseColumnNames: idea_code
+            constraintName: fk_recipe_idea_reference
+            referencedTableName: idea
+            referencedColumnNames: code
+
+        - addForeignKeyConstraint:
+            baseTableName: recipe_image
+            baseColumnNames: recipe_id
+            constraintName: fk_recipe_image_reference
+            referencedTableName: recipe
+            referencedColumnNames: id
+
+        - addForeignKeyConstraint:
+            baseTableName: interest
+            baseColumnNames: idea_id
+            constraintName: fk_idea_interest_user_id
+            referencedTableName: idea
+            referencedColumnNames: id

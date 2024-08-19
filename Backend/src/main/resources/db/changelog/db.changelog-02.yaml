@@ -1,0 +1,280 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: your_name
+      changes:
+        - createTable:
+            tableName: role
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: VARCHAR(16)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: is_active
+                  type: BOOLEAN
+                  constraints:
+                    defaultValue: true
+              - column:
+                  name: created_at
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    defaultValue: CURRENT_TIMESTAMP
+                    onUpdate: CURRENT_TIMESTAMP
+
+        - createTable:
+            tableName: user
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: username
+                  type: VARCHAR(32)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
+                  type: VARCHAR(128)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role_id
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_deleted
+                  type: BOOLEAN
+                  constraints:
+                    defaultValue: false
+              - column:
+                  name: created_at
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    defaultValue: CURRENT_TIMESTAMP
+                    onUpdate: CURRENT_TIMESTAMP
+
+        - createTable:
+            tableName: profile
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: first_name
+                  type: VARCHAR(16)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: middle_name
+                  type: VARCHAR(16)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: last_name
+                  type: VARCHAR(16)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: INT
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: email
+                  type: VARCHAR(50)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: address_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: contact_no
+                  type: VARCHAR(16)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    defaultValue: CURRENT_TIMESTAMP
+                    onUpdate: CURRENT_TIMESTAMP
+
+        - createTable:
+            tableName: address
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: house_no
+                  type: VARCHAR(16)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: street
+                  type: VARCHAR(16)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: area
+                  type: VARCHAR(32)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: city
+                  type: VARCHAR(32)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: country
+                  type: VARCHAR(32)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    defaultValue: CURRENT_TIMESTAMP
+                    onUpdate: CURRENT_TIMESTAMP
+
+        - createTable:
+            tableName: interest
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: idea_id
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: text
+                  type: VARCHAR(16)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    defaultValue: CURRENT_TIMESTAMP
+                    onUpdate: CURRENT_TIMESTAMP
+
+        - createTable:
+            tableName: dietary_restriction
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: text
+                  type: VARCHAR(16)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    defaultValue: CURRENT_TIMESTAMP
+                    onUpdate: CURRENT_TIMESTAMP
+        
+        - addForeignKeyConstraint:
+            baseTableName: dietary_restriction
+            baseColumnNames: user_id
+            constraintName: fk_user_dietary_restriction_user_id
+            referencedTableName: user
+            referencedColumnNames: id
+
+        - addForeignKeyConstraint:
+            baseTableName: profile
+            baseColumnNames: address_id
+            constraintName: fk_user_address_user_id
+            referencedTableName: address
+            referencedColumnNames: id
+            
+        - addForeignKeyConstraint:
+            baseTableName: profile
+            baseColumnNames: user_id
+            constraintName: fk_profile_user_id
+            referencedTableName: user
+            referencedColumnNames: id
+
+        - addForeignKeyConstraint:
+            baseTableName: user
+            baseColumnNames: role_id
+            constraintName: fk_role_user_id
+            referencedTableName: role
+            referencedColumnNames: id
