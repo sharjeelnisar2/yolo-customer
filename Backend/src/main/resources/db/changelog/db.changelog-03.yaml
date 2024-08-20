@@ -19,6 +19,11 @@ databaseChangeLog:
                   name: description
                   type: VARCHAR(64)
               - column:
+                  name: code
+                  type: VARCHAR(5)
+                  constraints:
+                    unique: true
+              - column:
                   name: idea_status_id
                   type: INT
                   constraints:
@@ -28,11 +33,6 @@ databaseChangeLog:
                   type: INT
                   constraints:
                     nullable: false
-              - column:
-                  name: code
-                  type: VARCHAR(5)
-                  constraints:
-                    unique: true
               - column:
                   name: created_at
                   type: DATETIME
@@ -55,13 +55,13 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
               - column:
-                  name: idea_id
-                  type: INT
+                  name: text
+                  type: VARCHAR(16)
                   constraints:
                     nullable: false
               - column:
-                  name: text
-                  type: VARCHAR(16)
+                  name: idea_id
+                  type: INT
                   constraints:
                     nullable: false
               - column:
@@ -86,13 +86,13 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
               - column:
-                  name: idea_id
-                  type: INT
+                  name: text
+                  type: VARCHAR(16)
                   constraints:
                     nullable: false
               - column:
-                  name: text
-                  type: VARCHAR(16)
+                  name: idea_id
+                  type: INT
                   constraints:
                     nullable: false
               - column:
@@ -123,11 +123,6 @@ databaseChangeLog:
                   name: description
                   type: TEXT
               - column:
-                  name: idea_code
-                  type: VARCHAR(5)
-                  constraints:
-                    nullable: false
-              - column:
                   name: serving_size
                   type: INT
               - column:
@@ -138,6 +133,11 @@ databaseChangeLog:
                   type: VARCHAR(5)
                   constraints:
                     unique: true
+              - column:
+                  name: idea_code
+                  type: VARCHAR(5)
+                  constraints:
+                    nullable: false
               - column:
                   name: created_at
                   type: DATETIME

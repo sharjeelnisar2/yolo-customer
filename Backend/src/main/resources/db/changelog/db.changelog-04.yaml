@@ -13,6 +13,14 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
               - column:
+                  name: amount
+                  type: BIGINT
+              - column:
+                  name: tracking_id
+                  type: VARCHAR(5)
+                  constraints:
+                    unique: true
+              - column:
                   name: order_status_id
                   type: INT
                   constraints:
@@ -22,14 +30,6 @@ databaseChangeLog:
                   type: INT
                   constraints:
                     nullable: false
-              - column:
-                  name: amount
-                  type: BIGINT
-              - column:
-                  name: tracking_id
-                  type: VARCHAR(5)
-                  constraints:
-                    unique: true
               - column:
                   name: created_at
                   type: DATETIME
@@ -52,18 +52,18 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
               - column:
+                  name: quantity
+                  type: INT
+              - column:
                   name: order_id
                   type: INT
                   constraints:
                     nullable: false
               - column:
-                  name: recipe_code
-                  type: VARCHAR(5)
+                  name: recipe_id
+                  type: INT
                   constraints:
                     nullable: false
-              - column:
-                  name: quantity
-                  type: INT
               - column:
                   name: created_at
                   type: DATETIME

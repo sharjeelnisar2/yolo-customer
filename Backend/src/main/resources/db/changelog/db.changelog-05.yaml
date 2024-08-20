@@ -89,7 +89,7 @@ databaseChangeLog:
 
         - addForeignKeyConstraint:
             baseTableName: order_item
-            baseColumnNames: recipe_code
+            baseColumnNames: recipe_id
             constraintName: fk_order_items_recipe_reference
             referencedTableName: recipe
-            referencedColumnNames: code
+            referencedColumnNames: id
