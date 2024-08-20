@@ -22,7 +22,7 @@ public class orderController {
 
     @GetMapping("/users/orders/")
     public ResponseEntity<?> getOrderList(@RequestParam(name = "page", defaultValue = "0") Integer page,
-                                          @RequestParam(name = "size", defaultValue = "1000") Integer size){
+                                          @RequestParam(name = "size", defaultValue = "10") Integer size){
 
 
         return null;
