@@ -280,10 +280,22 @@ paths:
           description: Idea successfully created.
         '400':
           description: Bad input parameter.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '401':
           description: Unauthorized. The user is not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: Server error. Something went wrong on the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
     get:
       tags:
@@ -293,13 +305,6 @@ paths:
       description: Retrieve ideas based on their status (DRAFT or SUBMITTED) and userId.
       parameters:
         - in: query
-          name: userId
-          description: ID of the user
-          required: true
-          schema:
-            type: string
-            example: user_123
-        - in: query
           name: status
           description: Status of the ideas to retrieve (DRAFT or SUBMITTED)
           required: true
@@ -307,23 +312,75 @@ paths:
             type: string
             enum: [DRAFT, SUBMITTED]
             example: DRAFT
+        # Pagination parameters
+        - in: query
+          name: page
+          description: Page number for pagination (default is 1)
+          required: false
+          schema:
+            type: integer
+            example: 1
+        - in: query
+          name: size
+          description: Number of ideas per page (default is 10)
+          required: false
+          schema:
+            type: integer
+            example: 10
+        # Sorting parameters
+        - in: query
+          name: sortBy
+          description: Field to sort ideas by (default is created_at)
+          required: false
+          schema:
+            type: string
+            example: created_at
+        - in: query
+          name: sortOrder
+          description: Order of sorting (asc or desc, default is desc)
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+            example: desc
+        # Searching and filtering parameters
+        - in: query
+          name: search
+          description: Search query to match idea titles
+          required: false
+          schema:
+            type: string
       responses:
         '200':
-          description: List of ideas matching the criteria.
+          description: Paginated list of ideas matching the criteria.
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/IdeaResponse'
+                $ref: '#/components/schemas/PaginatedIdeasResponse'
         '400':
           description: Bad request. Invalid query parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '401':
           description: Unauthorized. The user is not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: No ideas found for the user with the given status.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: Server error. Something went wrong on the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
 #------------------valeena------------------------
 components:
@@ -495,6 +552,7 @@ components:
           description: List of image URLs associated with the recipe.
 
     #------------------moiz ------------------------
+
     IdeaRequest:
       type: object
       required:
@@ -515,13 +573,17 @@ components:
           type: string
           example: Tacos made with a spicy vegan twist using plant-based ingredients.
         interests:
-          type: string
+          type: array
           description: Customer's interests
-          example: mexican
+          items:
+            type: string
+          example: ["mexican", "spicy"]
         dietaryRestrictions:
-          type: string
+          type: array
           description: Customer's Dietary Restrictions
-          example: gluten-free
+          items:
+            type: string
+          example: ["gluten-free"]
 
     IdeaResponse:
       type: object
@@ -539,13 +601,17 @@ components:
           description: Description of the idea
           example: Tacos made with a spicy vegan twist using plant-based ingredients.
         interests:
-          type: string
+          type: array
           description: Customer's interests
-          example: mexican
+          items:
+            type: string
+          example: ["mexican", "spicy"]
         dietaryRestrictions:
-          type: string
+          type: array
           description: Customer's Dietary Restrictions
-          example: gluten-free
+          items:
+            type: string
+          example: ["gluten-free"]
         idea_status:
           type: string
           description: Status of the idea
@@ -559,3 +625,28 @@ components:
           format: date-time
           description: Timestamp when the idea was created
           example: '2024-08-13T14:00:00Z'
+
+    PaginatedIdeasResponse:
+      type: object
+      properties:
+        currentPage:
+          type: integer
+          description: Current page number
+          example: 1
+        pageSize:
+          type: integer
+          description: Number of ideas per page
+          example: 10
+        totalItems:
+          type: integer
+          description: Total number of ideas
+          example: 100
+        totalPages:
+          type: integer
+          description: Total number of pages
+          example: 10
+        data:
+          type: array
+          description: List of ideas in the current page
+          items:
+            $ref: '#/components/schemas/IdeaResponse'
