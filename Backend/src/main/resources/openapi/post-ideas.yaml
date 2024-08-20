@@ -1,0 +1,271 @@
+openapi: 3.0.1
+info:
+  title: Customer App API
+  description: API Specification for posting customer ideas to vendors' application, updating status, and placing orders
+  version: 0.0.1
+servers:
+  - url: /
+paths:
+  /api/v1/users/ideas/{ideaId}:
+    patch:
+      tags:
+        - post-idea
+      summary: Update idea status to "submitted" and submit the idea to the vendor
+      description: |
+        This endpoint updates the status of a customer's idea to "submitted" in the customer database using the provided ideaId. After updating the status, the idea details are submitted to the vendor's system.
+      parameters:
+        - name: ideaId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 123
+          description: The unique ID of the idea to be updated
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitIdeaRequest'
+      responses:
+        '200':
+          description: Idea status updated and submitted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ideaId:
+                    type: integer
+                    format: int64
+                    example: 123
+                  status:
+                    type: string
+                    example: submitted
+                  message:
+                    type: string
+                    example: Idea status updated to "submitted" and successfully submitted to the vendor system.
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid idea data provided or status update failed.
+        '401':
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized access. Please check your credentials.
+        '404':
+          description: Idea not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Idea with the specified ideaId not found.
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: An error occurred while updating the idea status or submitting the idea to the vendor system.
+
+  /api/v1/orders:
+    post:
+      tags:
+        - place-order
+      summary: Place an order to the vendor and track it in the internal database
+      description: |
+        This endpoint allows a customer to place an order to the vendor's system. Upon successful order placement, the order is also saved in the internal database for tracking order history.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaceOrderRequest'
+      responses:
+        '200':
+          description: Order placed successfully and tracked internally
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  orderId:
+                    type: integer
+                    format: int64
+                    example: 1234
+                  vendorOrderId:
+                    type: string
+                    example: VEND123456
+                  status:
+                    type: string
+                    example: Order placed and tracked successfully
+                  message:
+                    type: string
+                    example: The order was successfully placed with the vendor and is now being tracked in the internal system.
+        '400':
+          description: Bad request due to invalid order data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid order data provided. Please check the input values.
+        '401':
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized access. Please check your credentials.
+        '404':
+          description: Order not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: The specified order was not found.
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: An error occurred while placing the order or saving it in the internal system.
+
+components:
+  schemas:
+    SubmitIdeaRequest:
+      type: object
+      required:
+        - customerName
+        - title
+        - description
+        - ideaCode
+      properties:
+        customerName:
+          type: string
+          example: Ahmad
+        title:
+          type: string
+          example: Thai Food
+        description:
+          type: string
+          example: Thai food having fish and excess onions.
+        interests:
+          type: array
+          items:
+            type: string
+          example:
+            - Chicken
+            - Thai
+            - Chest piece
+        dietaryRestrictions:
+          type: array
+          items:
+            type: string
+          example:
+            - Excess salt
+            - Excess oil
+            - Excess spices
+        ideaCode:
+          type: string
+          example: ABC12
+        status:
+          type: string
+          example: SUBMITTED
+
+    PlaceOrderRequest:
+      type: object
+      required:
+        - price
+        - order_code
+        - customer_contact_no
+        - address
+        - items
+      properties:
+        price:
+          type: number
+          format: float
+          example: 19999
+        order_code:
+          type: string
+          example: ORD01
+        customer_contact_no:
+          type: string
+          example: "+1234567890"
+        address:
+          type: object
+          required:
+            - house_no
+            - street_no
+            - area
+            - city
+            - country
+          properties:
+            house_no:
+              type: integer
+              example: 123
+            street_no:
+              type: integer
+              example: 456
+            area:
+              type: string
+              example: Downtown
+            zip_code:
+              type: string
+              example: "12345"
+            city:
+              type: string
+              example: Metropolis
+            country:
+              type: string
+              example: US
+        items:
+          type: array
+          items:
+            type: object
+            required:
+              - quantity
+              - price
+              - recipe_code
+            properties:
+              quantity:
+                type: integer
+                example: 2
+              price:
+                type: number
+                format: float
+                example: 9999
+              recipe_code:
+                type: integer
+                example: 101
