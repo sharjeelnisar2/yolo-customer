@@ -1,0 +1,119 @@
+openapi: 3.0.0
+info:
+  title: User Management API
+  version: 1.0.0
+  description: API for creating user.
+
+paths:
+  /users:
+    post:
+      summary: Create User
+      description: Create user with provided information.
+      requestBody:
+        description: User object with required information.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/User'
+                - $ref: '#/components/schemas/User_Profile'
+                - $ref: '#/components/schemas/Address'
+        required: true
+      responses:
+        '201':
+          description: User created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad request.
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for the user.
+        role_id:
+          type: integer
+          description: The role identifier of the order.
+        username:
+          type: string
+          description: Username of the user.
+        is_deleted:
+          type: boolean
+          description: Flag that tells if user is deleted or not.
+        created_at:
+          type: string
+          format: date-time
+          description: The timestamp when user was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: The timestamp when user was last updated.
+    User_Profile:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for the user profile.
+        first_name:
+          type: string
+          description: First name of the user.
+        middle_name:
+          type: string
+          description: Middle name of the user.
+        last_name:
+          type: string
+          description: Last name of the user.
+        user_id:
+          type: integer
+          description: The user identifier of the user profile.
+        email:
+          type: string
+          description: Email of the user.
+        address_id:
+          type: integer
+          description: Address Identifier of the user.
+        contact_no:
+          type: string
+          description: Contact number of the user.
+        created_at:
+          type: string
+          format: date-time
+          description: The timestamp when user profile was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: The timestamp when user profile was last updated.
+    Address:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for the address.
+        house_no:
+          type: string
+          description: House No of the user.
+        street:
+          type: string
+          description: Street of the user.
+        area:
+          type: string
+          description: Area of the user.
+        city:
+          type: string
+          description: City of the user.
+        country:
+          type: string
+          description: Country of the user.
+        created_at:
+          type: string
+          format: date-time
+          description: The timestamp when user profile was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: The timestamp when user profile was last updated.

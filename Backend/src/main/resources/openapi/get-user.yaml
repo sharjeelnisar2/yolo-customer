@@ -1,0 +1,49 @@
+openapi: 3.0.0
+info:
+  title: User Management API
+  version: 1.0.0
+  description: API for retrieving user on the basis of username.
+
+paths:
+  /users/{username}:
+    parameters:
+      - name: username
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get User By Username
+      description: Retrieve the user if it exists and return null in other case.
+      responses:
+        '200':
+          description: A user is retrieved.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for the user.
+        role_id:
+          type: integer
+          description: The role identifier of the order.
+        username:
+          type: string
+          description: Username of the user.
+        is_deleted:
+          type: boolean
+          description: Flag that tells if user is deleted or not.
+        created_at:
+          type: string
+          format: date-time
+          description: The timestamp when user was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: The timestamp when user was last updated.
