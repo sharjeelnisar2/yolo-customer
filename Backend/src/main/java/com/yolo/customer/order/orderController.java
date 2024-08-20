@@ -13,13 +13,14 @@ public class orderController {
         this.OrderService = OrderService;
     }
 
-    @PatchMapping("/users/orders/{id}")
-    public ResponseEntity<?> updateOrder(@PathVariable Integer ID){
+    @PatchMapping("/users/orders/{trackingid}")
+    public ResponseEntity<?> updateOrder(@PathVariable Integer trackingID){
+
 
         return null;
     }
 
-    @GetMapping("/users/orders")
+    @GetMapping("/users/orders/")
     public ResponseEntity<?> getOrderList(@RequestParam(name = "page", defaultValue = "0") Integer page,
                                           @RequestParam(name = "size", defaultValue = "1000") Integer size){
 
