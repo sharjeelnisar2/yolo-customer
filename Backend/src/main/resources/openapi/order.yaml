@@ -3,11 +3,12 @@ info:
   title: YOLO CUSTOMER API
   version: 1.0.0
 paths:
+
   #------eisha------------------------
   /users:
     post:
       tags:
-        - User
+        - user
       summary: Create a new user.
       description: A new user will be created after receiving the username.
       requestBody:
@@ -45,7 +46,7 @@ paths:
   /users/user-profiles/{id}:
     post:
       tags:
-        - User
+        - user
       summary: Create a new user profile.
       description: A new user profile will be created for the user.
       parameters:
@@ -96,7 +97,7 @@ paths:
   /users/{username}:
     get:
       tags:
-        - User
+        - user
       summary: Get User By Username
       description: Retrieve the user if it exists, or return null otherwise.
       parameters:
@@ -189,7 +190,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  /users/orders/:
+  /users/orders:
     get:
       parameters:
         - in: query
@@ -326,7 +327,7 @@ paths:
   /users/ideas/recipes:
     get:
       tags:
-        - Recipes
+        - recipes
       summary: Get All Recipes
       description: Retrieve a list of all recipes, optionally filtered by idea ID, with pagination and search functionality.
       parameters:
@@ -402,70 +403,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  /users/ideas/recipes/{id}:
-    get:
-      tags:
-        - Recipes
-      summary: Get Recipe Details by Recipe ID
-      description: Retrieve the details of a particular recipe, optionally filtered by idea code.
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-          description: The ID of the recipe.
-        - name: ideaCode
-          in: query
-          required: false
-          schema:
-            type: string
-          description: The code of the idea to filter by.
-      responses:
-        '200':
-          description: Details of the requested recipe.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Recipe'
-        '400':
-          description: Invalid request parameters.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized access.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: The recipe or idea was not found.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
-  /users/ideas/{code}/recipes:
     post:
       tags:
-        - Recipes
+        - recipes
       summary: Create a New Recipe for an Idea
       description: Submit a new recipe for a specific idea identified by its code.
-      parameters:
-        - name: code
-          in: path
-          required: true
-          schema:
-            type: string
-          description: The code of the idea.
+
       requestBody:
         required: true
         content:
@@ -499,6 +442,59 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+
+  # /users/ideas/recipes/{id}:
+  #   get:
+  #     tags:
+  #       - recipes
+  #     summary: Get Recipe Details by Recipe ID
+  #     description: Retrieve the details of a particular recipe, optionally filtered by idea code.
+  #     parameters:
+  #       - name: id
+  #         in: path
+  #         required: true
+  #         schema:
+  #           type: integer
+  #         description: The ID of the recipe.
+  #       - name: ideaCode
+  #         in: query
+  #         required: false
+  #         schema:
+  #           type: string
+  #         description: The code of the idea to filter by.
+  #     responses:
+  #       '200':
+  #         description: Details of the requested recipe.
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/Recipe'
+  #       '400':
+  #         description: Invalid request parameters.
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/ErrorResponse'
+  #       '401':
+  #         description: Unauthorized access.
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/ErrorResponse'
+  #       '404':
+  #         description: The recipe or idea was not found.
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/ErrorResponse'
+  #       '500':
+  #         description: Internal server error.
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/ErrorResponse'
+
+
 
 
 
@@ -855,6 +851,7 @@ components:
           type: string
           format: date-time
           description: The timestamp when the order item was last updated.
+
     #------------------Ahmad------------------------
 
 
@@ -933,9 +930,7 @@ components:
             area:
               type: string
               example: Downtown
-            zip_code:
-              type: string
-              example: "12345"
+
             city:
               type: string
               example: Metropolis
@@ -985,6 +980,7 @@ components:
         recipe_code:
           type: string
           description: The code identifying the recipe.
+
         idea_code:
           type: string
           description: The code identifying the related idea.
@@ -1011,6 +1007,8 @@ components:
         - serving_size
         - price
         - recipe_code
+        - idea_code
+        - images
       properties:
         title:
           type: string
@@ -1028,6 +1026,9 @@ components:
         recipe_code:
           type: string
           description: The code identifying the recipe.
+        idea_code:
+          type: string
+          description: The code identifying the idea.
         images:
           type: array
           items:
