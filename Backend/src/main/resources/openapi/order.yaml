@@ -325,6 +325,82 @@ paths:
         '500':
           description: Server error. Something went wrong on the server.
 
+  #------eisha------------------------
+  /users:
+    post:
+      tags:
+        - User
+      summary: Create a new user.
+      description: A new user will be created after receiving username.
+      responses:
+        '201':
+          description: User will be created..
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRequest'
+        '400':
+          description: Invalid request parameters.
+        '401':
+          description: Unauthorized access.
+        '500':
+          description: Internal server error.
+
+  /users/user-profiles/{id}:
+    post:
+      tags:
+        - User
+      summary: Create a new user profile.
+      description: A new user profile will be created against the user.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the user.
+      responses:
+        '201':
+          description: User profile will be created.
+          content:
+            application/json:
+              allOf:
+                - $ref: '#/components/schemas/UserProfileRequest'
+                - $ref: '#/components/schemas/AddressRequest'
+        '400':
+          description: Invalid request parameters.
+        '401':
+          description: Unauthorized access.
+        '404':
+          description: The user was not found.
+        '500':
+          description: Internal server error.
+
+
+  /users/{username}:
+    parameters:
+      - name: username
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get User By Username
+      description: Retrieve the user if it exists and return null in other case.
+      responses:
+        '200':
+          description: A user is retrieved.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized access.
+        '404':
+          description: No user found against the given username.
+        '500':
+          description: Internal server error.
+
 #------------------valeena------------------------
 components:
   schemas:
@@ -559,3 +635,79 @@ components:
           format: date-time
           description: Timestamp when the idea was created
           example: '2024-08-13T14:00:00Z'
+
+    #------------------eisha ------------------------
+    UserRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for the user.
+        username:
+          type: string
+          description: Username of the user.
+
+    UserProfileRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for the user profile.
+        first_name:
+          type: string
+          description: First name of the user.
+        last_name:
+          type: string
+          description: Last name of the user.
+        email:
+          type: string
+          description: Email of the user.
+        contact_no:
+          type: string
+          description: Contact number of the user.
+
+    AddressRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for the address.
+        house_no:
+          type: string
+          description: House No of the user.
+        street:
+          type: string
+          description: Street of the user.
+        area:
+          type: string
+          description: Area of the user.
+        city:
+          type: string
+          description: City of the user.
+        country:
+          type: string
+          description: Country of the user.
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for the user.
+        role_id:
+          type: integer
+          description: The role identifier of the order.
+        username:
+          type: string
+          description: Username of the user.
+        is_deleted:
+          type: boolean
+          description: Flag that tells if user is deleted or not.
+        created_at:
+          type: string
+          format: date-time
+          description: The timestamp when user was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: The timestamp when user was last updated.
