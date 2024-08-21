@@ -133,62 +133,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  #------valeena------------------------
-  /users/orders/{trackingid}:
-    parameters:
-      - in: path
-        name: trackingid
-        required: true
-        schema:
-          type: string
-        description: The tracking ID of the order to be updated
-    patch:
-      tags:
-        - orders
-      summary: Update Order
-      description: Update the details of a specific order.
-      requestBody:
-        description: Order status object to update.
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                order_status:
-                  type: string
-                  description: The new status of the order.
-              required:
-                - order_status
-      responses:
-        '200':
-          description: Order updated successfully.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  order_status:
-                    type: string
-                    description: The status of the order.
-                  tracking_id:
-                    type: string
-                    description: The tracking ID of the order.
-                  message:
-                    type: string
-                    description: Success message.
-                    example: Order updated successfully.
-        '404':
-          description: Order not found.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '400':
-          description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
 
   /users/orders:
     get:
@@ -263,6 +207,7 @@ paths:
                           items:
                             $ref: '#/components/schemas/OrderItem'
 
+
     #------Ahmad------------------------
     post:
       tags:
@@ -288,15 +233,12 @@ paths:
                     type: integer
                     format: int64
                     example: 1234
-                  vendorOrderId:
-                    type: string
-                    example: VEND123456
                   status:
                     type: string
-                    example: Order placed and tracked successfully
+                    example: PLACED
                   message:
                     type: string
-                    example: The order was successfully placed with the vendor and is now being tracked in the internal system.
+                    example: Order placed successfully
         '400':
           description: Bad request due to invalid order data
           content:
@@ -309,18 +251,73 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Order not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+
+
+  #------valeena------------------------
+  /users/orders/{order_code}:
+    parameters:
+      - in: path
+        name: order_code
+        required: true
+        schema:
+          type: string
+        description: The tracking ID of the order to be updated
+    patch:
+      tags:
+        - orders
+      summary: Update Order
+      description: Update the details of a specific order.
+      requestBody:
+        description: Order status object to update.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                order_status:
+                  type: string
+                  description: The new status of the order.
+              required:
+                - order_status
+      responses:
+        '200':
+          description: Order updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  order_status:
+                    type: string
+                    description: The status of the order.
+                  tracking_id:
+                    type: string
+                    description: The tracking ID of the order.
+                  message:
+                    type: string
+                    description: Success message.
+                    example: Order updated successfully.
+        '404':
+          description: Order not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '400':
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+
 
   #------hassan------------------------
 
@@ -614,15 +611,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+
     #------Ahmad------------------------
 
   /users/ideas/{ideaId}:
     patch:
       tags:
         - ideas
-      summary: Update idea status to "submitted" and submit the idea to the vendor
+      summary: Submit the idea to the vendor and Update idea status to "submitted"
       description: |
-        This endpoint updates the status of a customer's idea to "submitted" in the customer database using the provided ideaId. After updating the status, the idea details are submitted to the vendor's system.
+        The idea details are submitted to the vendor's system and updates the status of a customer's idea to "submitted" in the customer database.
       parameters:
         - name: ideaId
           in: path
@@ -646,16 +644,12 @@ paths:
               schema:
                 type: object
                 properties:
-                  ideaId:
-                    type: integer
-                    format: int64
-                    example: 123
                   status:
                     type: string
-                    example: submitted
+                    example: SUBMITTED
                   message:
                     type: string
-                    example: Idea status updated to "submitted" and successfully submitted to the vendor system.
+                    example: Idea submitted to the vendor system.
         '400':
           description: Bad request
           content:
@@ -762,9 +756,6 @@ components:
     ErrorResponse:
       type: object
       properties:
-        error:
-          type: string
-          description: The error code or type.
         message:
           type: string
           description: A brief message describing the error.
@@ -890,7 +881,7 @@ components:
             - Excess spices
         ideaCode:
           type: string
-          example: ABC12
+          example: I1234
 
 
     PlaceOrderRequest:
@@ -908,7 +899,7 @@ components:
           example: 19999
         order_code:
           type: string
-          example: ORD01
+          example: O1234
         customer_contact_no:
           type: string
           example: "+1234567890"
@@ -929,14 +920,14 @@ components:
               example: 456
             area:
               type: string
-              example: Downtown
+              example: Area
 
             city:
               type: string
-              example: Metropolis
+              example: Lahore
             country:
               type: string
-              example: US
+              example: Pak
         items:
           type: array
           items:
