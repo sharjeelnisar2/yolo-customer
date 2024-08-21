@@ -10,7 +10,7 @@ paths:
       tags:
         - user
       summary: Create a new user.
-      description: A new user will be created after receiving the username.
+      description: A new user will be created after receiving username.
       requestBody:
         required: true
         content:
@@ -19,11 +19,7 @@ paths:
               $ref: '#/components/schemas/UserRequest'
       responses:
         '201':
-          description: User will be created.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
+          description: User created successfully.
         '400':
           description: Invalid request parameters.
           content:
@@ -43,19 +39,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  /users/user-profiles/{id}:
+  /users/{username}/user-profiles:
     post:
       tags:
         - user
       summary: Create a new user profile.
-      description: A new user profile will be created for the user.
+      description: A new user profile will be created against the user.
       parameters:
-        - name: id
+        - name: username
           in: path
           required: true
           schema:
-            type: integer
-          description: The ID of the user.
+            type: string
+          description: The username of the user.
       requestBody:
         required: true
         content:
@@ -64,11 +60,7 @@ paths:
               $ref: '#/components/schemas/UserProfileRequest'
       responses:
         '201':
-          description: User profile will be created.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UserProfileRequest'
+          description: User profile created successfully.
         '400':
           description: Invalid request parameters.
           content:
@@ -95,33 +87,26 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 
   /users/{username}:
+    parameters:
+      - name: username
+        in: path
+        required: true
+        schema:
+          type: string
     get:
       tags:
         - user
       summary: Get User By Username
-      description: Retrieve the user if it exists, or return null otherwise.
-      parameters:
-        - name: username
-          in: path
-          required: true
-          schema:
-            type: string
-          description: The username of the user.
+      description: Retrieve the user if it exists and return null in other case.
       responses:
         '200':
           description: A user is retrieved.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserFlag'
         '401':
           description: Unauthorized access.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: No user found against the given username.
           content:
             application/json:
               schema:
@@ -135,6 +120,58 @@ paths:
 
 
   /users/orders:
+
+    #------Ahmad------------------------
+    post:
+      tags:
+        - orders
+      summary: Place an order to the vendor and track it in the internal database
+      description: |
+        This endpoint allows a customer to place an order to the vendor's system. Upon successful order placement, the order is also saved in the internal database for tracking order history.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaceOrderRequest'
+      responses:
+        '200':
+          description: Order placed successfully and tracked internally
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  orderId:
+                    type: integer
+                    format: int64
+                    example: 1234
+                  status:
+                    type: string
+                    example: PLACED
+                  message:
+                    type: string
+                    example: Order placed successfully
+        '400':
+          description: Bad request due to invalid order data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
     get:
       parameters:
         - in: query
@@ -208,57 +245,6 @@ paths:
                             $ref: '#/components/schemas/OrderItem'
 
 
-    #------Ahmad------------------------
-    post:
-      tags:
-        - orders
-      summary: Place an order to the vendor and track it in the internal database
-      description: |
-        This endpoint allows a customer to place an order to the vendor's system. Upon successful order placement, the order is also saved in the internal database for tracking order history.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PlaceOrderRequest'
-      responses:
-        '200':
-          description: Order placed successfully and tracked internally
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  orderId:
-                    type: integer
-                    format: int64
-                    example: 1234
-                  status:
-                    type: string
-                    example: PLACED
-                  message:
-                    type: string
-                    example: Order placed successfully
-        '400':
-          description: Bad request due to invalid order data
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
 
   #------valeena------------------------
   /users/orders/{order_code}:
@@ -322,6 +308,47 @@ paths:
   #------hassan------------------------
 
   /users/ideas/recipes:
+
+    post:
+      tags:
+        - recipes
+      summary: Create a New Recipe for an Idea
+      description: Submit a new recipe for a specific idea identified by its code.
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewRecipe'
+      responses:
+        '201':
+          description: Recipe created successfully.
+        '400':
+          description: Invalid input provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized access.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Idea not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
     get:
       tags:
         - recipes
@@ -400,45 +427,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-    post:
-      tags:
-        - recipes
-      summary: Create a New Recipe for an Idea
-      description: Submit a new recipe for a specific idea identified by its code.
-
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/NewRecipe'
-      responses:
-        '201':
-          description: Recipe created successfully.
-        '400':
-          description: Invalid input provided.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized access.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Idea not found.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
 
   # /users/ideas/recipes/{id}:
   #   get:
@@ -677,44 +665,32 @@ paths:
 
 components:
   schemas:
+
     UserRequest:
       type: object
       properties:
-        id:
-          type: integer
-          description: The unique identifier for the user.
         username:
           type: string
           description: Username of the user.
+        email:
+          type: string
+          description: Email of the user.
 
     UserProfileRequest:
       type: object
       properties:
-        id:
-          type: integer
-          description: The unique identifier for the user profile.
         first_name:
           type: string
           description: First name of the user.
         last_name:
           type: string
           description: Last name of the user.
-        email:
-          type: string
-          description: Email of the user.
         contact_no:
           type: string
           description: Contact number of the user.
-
-    AddressRequest:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: The unique identifier for the address.
         house_no:
           type: string
-          description: House number of the user.
+          description: House No of the user.
         street:
           type: string
           description: Street of the user.
@@ -728,29 +704,15 @@ components:
           type: string
           description: Country of the user.
 
-    User:
+    UserFlag:
       type: object
       properties:
-        id:
-          type: integer
-          description: The unique identifier for the user.
-        role_id:
-          type: integer
-          description: The role identifier of the user.
-        username:
-          type: string
-          description: Username of the user.
-        is_deleted:
+        user_exists:
           type: boolean
-          description: Flag indicating if the user is deleted.
-        created_at:
-          type: string
-          format: date-time
-          description: The timestamp when the user was created.
-        updated_at:
-          type: string
-          format: date-time
-          description: The timestamp when the user was last updated.
+          description: Flag that tells if user exisits in database or not.
+        user_profile_filled:
+          type: boolean
+          description: Flag that tells if user profile is filled or not.
 
     #------------------valeena------------------------
     ErrorResponse:
@@ -979,10 +941,6 @@ components:
           type: string
           format: date-time
           description: The timestamp of when the recipe was created.
-        updated_at:
-          type: string
-          format: date-time
-          description: The timestamp of when the recipe was last updated.
         images:
           type: array
           items:
@@ -1090,7 +1048,7 @@ components:
         idea_code:
           type: string
           description: Code for the idea generated by the backend
-          example: 2202
+          example: I2202
         created_at:
           type: string
           format: date-time

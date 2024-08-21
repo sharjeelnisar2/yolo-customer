@@ -28,3 +28,4 @@ replay_pid*
 
 Frontend/node_modules/
 Backend/target/
+env.properties
